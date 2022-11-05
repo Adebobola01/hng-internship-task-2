@@ -9,11 +9,10 @@ app.use(bodyParser.json());
 
 //function to calculate numbers
 const getResult = (operation, num1, num2) => {
-    console.log(operation)
-    if (operation === "add" || operation === "Add" || operation === "Addition" || operation === "addition") return Number(num1) + Number(num2);
-    else if (operation === "subtract" || operation === "Subtraction" || operation === "Subtract" || operation === "subtraction") return Number(num1) - Number(num2);
-    else if (operation === "multiply" || operation === "Multiply" || operation === "multiplication" || operation === "Multiplication") return Number(num1) * Number(num2);
-    else if (operation === "divide" || operation === "Divide" || operation === "divition" || operation === "Divition") return Number(num1) / Number(num2);
+    if (operation === "add" || operation === "addition" || operation === "plus") return Number(num1) + Number(num2);
+    else if (operation === "subtract" || operation === "subtraction" || operation === "minus") return Number(num1) - Number(num2);
+    else if (operation === "multiply" || operation === "multiplication" || operation === "times") return Number(num1) * Number(num2);
+    else if (operation === "divide" || operation === "division") return Number(num1) / Number(num2);
 }
 
 
@@ -36,7 +35,7 @@ app.use((req, res, next) => {
 
 app.post("/", (req, res, next) => {
     //extract request body
-    const operation = req.body.operation_type;
+    const operation = req.body.operation_type.toLowerCase();
     const x = req.body.x;
     const y = req.body.y;
 
@@ -50,9 +49,8 @@ app.post("/", (req, res, next) => {
         operationResult = getResult(operation, x, y);
         operand = operation
     } else {
-        console.log(check)
         for (let i = 0; i < check.length; i++){
-            if (check[i] === 'add' || check[i] === 'Add' || check[i] === 'Addition' || check[i] === 'addition' || check[i] === 'subtract' || check[i] === 'Subtraction' || check[i] === 'Subtract' || check[i] === 'subtraction' || check[i] === 'multiply' || check[i] === 'Multiply' || check[i] === 'multiplication' || check[i] === 'Multiplication' || check[i] === 'divide' || check[i] === 'Divide' || check[i] === 'divition' || check[i] === 'Divition') {
+            if (check[i] === 'add' || check[i] === 'addition' || check[i] === 'subtract' || check[i] === 'subtraction' || check[i] === 'minus' || check[i] === 'multiply' || check[i] === 'multiplication' || check[i] === 'divide' || check[i] === 'division' || check[i] === "plus" || check[i] === "times") {
                 operand = check[i];
                 operationResult = getResult(check[i], x, y)
             };
@@ -63,7 +61,7 @@ app.post("/", (req, res, next) => {
     res.status(200).json({
         slackUsername: "adebobola",
         result: operationResult,
-        operation_type: operand.toLowerCase(),
+        operation_type: operand,
     })
 });
 
