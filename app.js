@@ -6,6 +6,18 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 
+
+//function to calculate numbers
+const getResult = (operation, num1, num2) => {
+    console.log(operation)
+    if (operation === "add" || operation === "Add" || operation === "Addition" || operation === "addition") return Number(num1) + Number(num2);
+    else if (operation === "subtract" || operation === "Subtraction" || operation === "Subtract" || operation === "subtraction") return Number(num1) - Number(num2);
+    else if (operation === "multiply" || operation === "Multiply" || operation === "multiplication" || operation === "Multiplication") return Number(num1) * Number(num2);
+    else if (operation === "divide" || operation === "Divide" || operation === "divition" || operation === "Divition") return Number(num1) / Number(num2);
+}
+
+
+//CORS handling
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
@@ -22,15 +34,8 @@ app.use((req, res, next) => {
     next();
 });
 
-const getResult = (operation, num1, num2) => {
-    if (operation = "add" || "Add" || "Addition" || "addition") return Number(num1) + Number(num2);
-    else if (operation = "subtract" || "Subtraction" || "Subtract" || "subtraction") return Number(num1) - Number(num2);
-    else if (operation = "multiply" || "Multiply" || "multiplication" || "Multiplication") return Number(num1) * Number(num2);
-    else if (operation = "divide" || "Divide" || "divition" || "Divition") return Number(num1) / Number(num2);
-}
-
 app.post("/", (req, res, next) => {
-    console.log("here")
+    //extract request body
     const operation = req.body.operation_type;
     const x = req.body.x;
     const y = req.body.y;
@@ -38,27 +43,31 @@ app.post("/", (req, res, next) => {
     let operationResult;
     let operand;
     
+
+    //checking if operation is a sentence or not
     const check = operation.split(" ");
     if (check.length === 1) {
-       operationResult = getResult(operation, x, y);
+        operationResult = getResult(operation, x, y);
+        operand = operation
     } else {
+        console.log(check)
         for (let i = 0; i < check.length; i++){
-            if (check[i] === 'add' || 'Add' || 'Addition' || 'addition' || 'subtract' || 'Subtraction' || 'Subtract' || 'subtraction' || 'multiply' || 'Multiply' || 'multiplication' || 'Multiplication' || 'divide' || 'Divide' || 'divition' || 'Divition') {
+            if (check[i] === 'add' || check[i] === 'Add' || check[i] === 'Addition' || check[i] === 'addition' || check[i] === 'subtract' || check[i] === 'Subtraction' || check[i] === 'Subtract' || check[i] === 'subtraction' || check[i] === 'multiply' || check[i] === 'Multiply' || check[i] === 'multiplication' || check[i] === 'Multiplication' || check[i] === 'divide' || check[i] === 'Divide' || check[i] === 'divition' || check[i] === 'Divition') {
                 operand = check[i];
                 operationResult = getResult(check[i], x, y)
             };
-            return
         }
     }
 
+    //sending response
     res.status(200).json({
         slackUsername: "adebobola",
-        operation_type: operand,
-        result: operationResult
+        result: operationResult,
+        operation_type: operand.toLowerCase(),
     })
 });
 
-app.listen(process.env.PORT || 2000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("listening on port 2000")
 });
 
