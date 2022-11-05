@@ -34,7 +34,7 @@ app.post("/", (req, res, next) => {
     const y = req.body.y;
 
     let operationResult;
-    let op;
+    let operand;
     
     const check = operation.split(" ");
     if (check.length === 1) {
@@ -42,8 +42,8 @@ app.post("/", (req, res, next) => {
     } else {
         for (let i = 0; i < check.length; i++){
             if (check[i] === 'add' || 'Add' || 'Addition' || 'addition' || 'subtract' || 'Subtraction' || 'Subtract' || 'subtraction' || 'multiply' || 'Multiply' || 'multiplication' || 'Multiplication' || 'divide' || 'Divide' || 'divition' || 'Divition') {
+                operand = check[i];
                 operationResult = getResult(check[i], x, y)
-                op = check[i];
             };
             return
         }
